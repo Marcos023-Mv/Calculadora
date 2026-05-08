@@ -1,0 +1,101 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a1a2e;
+  font-family: 'Nunito', sans-serif;
+}
+
+.calc {
+  background: #16213e;
+  border-radius: 24px;
+  padding: 28px 24px 24px;
+  width: 300px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* Display */
+.display {
+  background: #0f0f23;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 20px;
+  text-align: right;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+#historico {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  color: #555577;
+  min-height: 18px;
+}
+
+#visor {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 32px;
+  color: #e0e0ff;
+  word-break: break-all;
+}
+
+#visor.erro {
+  color: #ff6b6b;
+  font-size: 18px;
+}
+
+/* Grade de botões */
+.botoes {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+button {
+  height: 62px;
+  border: none;
+  border-radius: 14px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s, filter 0.1s;
+  background: #1a2744;
+  color: #c8cae8;
+}
+
+button:hover  { filter: brightness(1.2); }
+button:active { transform: scale(0.92); }
+
+button.op {
+  background: #0f3460;
+  color: #5eb3f7;
+  font-size: 22px;
+}
+
+button.limpar {
+  background: #3d1a2e;
+  color: #ff6b6b;
+}
+
+button.igual {
+  background: linear-gradient(135deg, #e94560, #c0392b);
+  color: #fff;
+  font-size: 24px;
+  grid-column: span 2;
+  box-shadow: 0 4px 20px rgba(233, 69, 96, 0.4);
+}
+
+button.zero {
+  grid-column: span 2;
+}
