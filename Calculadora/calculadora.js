@@ -1,6 +1,6 @@
-let numA      = null;   // primeiro número
-let op        = null;   // operação pendente
-let digitando = false;  // true = digitando o segundo número
+let numA      = null;
+let op        = null;
+let digitando = false;
 
 const visor = document.getElementById("visor");
 const hist  = document.getElementById("historico");
@@ -21,19 +21,16 @@ function digito(d) {
     return;
   }
 
-  if (d === "." && atual.includes(".")) return; // só uma vírgula
+  if (d === "." && atual.includes(".")) return;
   mostrar(atual === "0" && d !== "." ? d : atual + d);
 }
 
 function definirOp(novaOp) {
-  const valorAtual = parseFloat(visor.textContent);
-
-  // Se já há operação pendente, calcula antes de continuar
   if (op && digitando) {
     calcular(false);
     numA = parseFloat(visor.textContent);
   } else {
-    numA = valorAtual;
+    numA = parseFloat(visor.textContent);
   }
 
   op        = novaOp;
@@ -41,40 +38,36 @@ function definirOp(novaOp) {
   hist.textContent = numA + " " + SIMBOLOS[op];
 }
 
-async function calcular(mostrarHistorico = true) {
+function calcular(mostrarHistorico = true) {
   if (op === null || numA === null) return;
 
   const numB = parseFloat(visor.textContent);
+  let resultado;
 
-  try {
-    const resp = await fetch("/calcular", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ a: numA, b: numB, op }),
-    });
-
-    const dados = await resp.json();
-
-    if (dados.erro) {
-      visor.textContent = dados.erro;
+  if (op === "+") resultado = numA + numB;
+  else if (op === "-") resultado = numA - numB;
+  else if (op === "*") resultado = numA * numB;
+  else if (op === "/") {
+    if (numB === 0) {
+      visor.textContent = "Divisão por zero";
       visor.classList.add("erro");
       limpar();
       return;
     }
-
-    if (mostrarHistorico) {
-      hist.textContent = `${numA} ${SIMBOLOS[op]} ${numB} =`;
-    }
-
-    mostrar(dados.resultado);
-    numA      = dados.resultado;
-    op        = null;
-    digitando = false;
-
-  } catch {
-    visor.textContent = "Erro de conexão";
-    visor.classList.add("erro");
+    resultado = numA / numB;
   }
+
+  // Remove casas decimais desnecessárias
+  resultado = parseFloat(resultado.toFixed(10));
+
+  if (mostrarHistorico) {
+    hist.textContent = `${numA} ${SIMBOLOS[op]} ${numB} =`;
+  }
+
+  mostrar(resultado);
+  numA      = resultado;
+  op        = null;
+  digitando = false;
 }
 
 function apagar() {
@@ -95,13 +88,13 @@ function limpar() {
 
 // Teclado físico
 document.addEventListener("keydown", e => {
-  if (e.key >= "0" && e.key <= "9")      digito(e.key);
-  if (e.key === ".")                      digito(".");
-  if (e.key === "+")                      definirOp("+");
-  if (e.key === "-")                      definirOp("-");
-  if (e.key === "*")                      definirOp("*");
+  if (e.key >= "0" && e.key <= "9")       digito(e.key);
+  if (e.key === ".")                       digito(".");
+  if (e.key === "+")                       definirOp("+");
+  if (e.key === "-")                       definirOp("-");
+  if (e.key === "*")                       definirOp("*");
   if (e.key === "/") { e.preventDefault(); definirOp("/"); }
-  if (e.key === "Enter" || e.key === "=") calcular();
-  if (e.key === "Backspace")              apagar();
-  if (e.key === "Escape")                 limpar();
+  if (e.key === "Enter" || e.key === "=")  calcular();
+  if (e.key === "Backspace")               apagar();
+  if (e.key === "Escape")                  limpar();
 });
